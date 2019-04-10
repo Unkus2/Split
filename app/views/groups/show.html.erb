@@ -1,0 +1,65 @@
+<div class="logo logo1">
+  <%= image_tag "logo" %>
+</div>
+<div class="modalWrap1"></div>
+<div class="row">
+  <div class="modal1 col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1">
+    <form action="" class="addMemF" method="post">
+	    <input type="hidden" name="_method" value="patch">
+	    <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+      <div class="form-group">
+        <label for="invite">$plitters you want to add into this group:</label>
+        <input type="text" class="form-control" id="invite" placeholder="Enter name">
+      </div>
+      <div class="inviteWrap"></div>
+      <div class="inviteResult"></div>
+      <input type="submit" class="btn btn-info btn-sm" value="Save">
+    </form>
+  </div>
+</div>
+
+<div class="main">
+  <% if flash[:error] %>
+  <% flash[:error].each do |msg| %>
+  <p class="errMsg"><%= msg %></p>
+  <% end -%>
+  <% end -%>
+	<div class="containerGrp row groupInfo">
+  <h2 class="groupSum">Group: <%= @group.name %></h2>
+  <h4>Created by: <%= @members.first.user.first_name %> <%= @members.first.user.last_name %></h4>
+  <div class="hr"></div>
+    <div class="col-lg-6 col-md-6 col-sm-10 col-xs-10 col-lg-offset-0 col-md-offset-0 col-sm-offset-1 col-xs-offset-1">  		
+  		<h2>Members:</h2>
+  		<% if @members.count == 1 and @members.first.user == @current_user %>
+  			<p class="memberinfo">You're the only member in the group!</p>
+  		<% else %>
+  		<table class="showMember table">
+  			<% @members.each do |m| %>
+  			<tr class="memberinfo">
+          <td><%= m.user.first_name %> <%= m.user.last_name %></td>   
+        </tr>
+  			<% end -%>
+  		</table>
+  		<% end -%>
+  		<button class="btn btn-success btn-sm newmember" data-groupId="<%= @group.id %>">Invite</button>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-10 col-xs-10 col-lg-offset-0 col-md-offset-0 col-sm-offset-1 col-xs-offset-1">
+  		<h3>List of Expenses</h3>
+  		<% if @group.expenses.count > 0 %>
+  			<table class="table table-hover">
+  				<% @group.expenses.each do |expense| %>
+  					<tr class="memberinfo">
+              <td><a href="/expenses/<%= expense.id %>"><%= expense.name %></a></td>     
+              <td><%= link_to "Edit", "/expenses/#{expense.id}/#{@group.id}", class: "btn btn-info btn-xs" %></td>
+            </tr>
+  				<% end %>
+  			</table>
+  		<% else %>
+  			<p>No expenses in this group.</p>
+  		<% end %>
+      <a href="/expenses/<%= @group.id %>/new" class="btn btn-info btn-sm newexpense">New Expense</a>
+    </div>
+	</div>
+</div>
+  
